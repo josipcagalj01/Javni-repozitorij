@@ -35,6 +35,8 @@ student* procitaj_podatke(char ime_datoteke[40], int br)
 	student *niz=NULL;
 	FILE *pdat;
 	niz=(student *)malloc(br*sizeof(student));
+	if (niz == NULL)
+		printf("Memorija nije uspjesno alocirana.\n");
 	for(i=0;i<br;i++)
 	{
 		niz[i].ime[0]='\0';
@@ -79,10 +81,7 @@ int main()
     		getchar();
     		br=prebroji_retke(ime_datoteke);
     		if(br==0)
-    		{
-			printf("Nisu učitani podaci ni za jednog studenta.\n");
 			continue;
-		}
 		else
 		{
 			niz=procitaj_podatke(ime_datoteke,br);

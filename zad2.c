@@ -61,8 +61,8 @@ polozaj pronadji_prije(polozaj p, char *prezime)
 	{
 		if(!strcmp(temp->iduci->prezime,prezime))
 		{
-			break;
 			nadjen=1;
+			break;
 		}
 		temp=temp->iduci;
 	}

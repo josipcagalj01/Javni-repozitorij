@@ -28,11 +28,17 @@ int main(int argc, char** argv)
 
 	if (argc > 1) ucitaj_podatke(argv[1], korijen);
 	else
-	{
-		printf("Kako se zove datoteka iz koje ucitavas podatke? ");
-		scanf_s(" %s", ime_datoteke, 50);
-		korijen=ucitaj_podatke(ime_datoteke, korijen);
-	}
+		do
+		{
+			printf("Kako se zove datoteka iz koje ucitavas podatke? ");
+			scanf_s(" %s", ime_datoteke, 50);
+			if (*ime_datoteke == '/')
+			{
+				system("pause");
+				return 0;
+			}
+			korijen=ucitaj_podatke(ime_datoteke, korijen);
+		} while (!korijen);
 
 	printf("Unesi donju granicu broja stanovnika! ");
 	scanf_s("%d", &br);
@@ -57,8 +63,7 @@ polozaj ucitaj_podatke(char ime_datoteke[50], polozaj p)
 		{
 			fgets(kontrola, 1024, pdat);
 			a = sscanf_s(kontrola, "%s %s", ime_drzave, 50, ime_datoteke2, 50);
-			if (a == 2) p = unesi_u_stablo(p, ime_drzave, ime_datoteke2,1);
-			else if(a==1) p = unesi_u_stablo(p, ime_drzave,ime_datoteke, 0);
+			p = unesi_u_stablo(p, ime_drzave, ime_datoteke2,a);
 		}
 		fclose(pdat);
 	}
@@ -153,7 +158,7 @@ polozaj unesi_u_stablo(polozaj p, char ime_drzave[50], char ime_datoteke[50], in
 	if (!p)
 	{
 		p = dodaj_drzavu(ime_drzave);
-		if(status) ucitaj_gradove(ime_datoteke, p);
+		if(status==2) ucitaj_gradove(ime_datoteke, p);
 	}
 	else if (strcmp(p->ime, ime_drzave) > 0) p->L = unesi_u_stablo(p->L, ime_drzave,ime_datoteke,status);
 	else if (strcmp(p->ime, ime_drzave) < 0) p->D = unesi_u_stablo(p->D, ime_drzave,ime_datoteke,status);
@@ -169,9 +174,14 @@ polozaj1 dodaj_grad(char ime_grada[50], polozaj1 p, int br)
 		novi->iduci = p;
 		strcpy_s(novi->ime, 50, ime_grada);
 		novi->broj_stanovnika = br;
+		return novi;
 	}
-	else puts("Nije uspjela alokacija memorije!");
-	return novi;
+	else
+	{
+		puts("Nije uspjela alokacija memorije!");
+		return p;
+	}
+	
 }
 
 polozaj pronadi(polozaj p, char ime_drzave[50])
